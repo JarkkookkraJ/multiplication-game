@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplication Training Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Multiplication Training</h1>
+            <div class="stats">
+                <div class="stat">
+                    <span class="label">Correct:</span>
+                    <span id="correct-count">0</span>
+                </div>
+                <div class="stat">
+                    <span class="label">Wrong:</span>
+                    <span id="wrong-count">0</span>
+                </div>
+                <div class="stat">
+                    <span class="label">Time:</span>
+                    <span id="timer">00:00</span>
+                </div>
+                <div class="stat">
+                    <span class="label">Target:</span>
+                    <span>20 correct</span>
+                </div>
+            </div>
+        </header>
+
+        <main id="game-area">
+            <div id="start-screen">
+                <div class="highscores-section">
+                    <h3>🏆 High Scores</h3>
+                    <ol id="highscores-list" class="highscores-list">
+                        <li class="no-scores">No high scores yet!</li>
+                    </ol>
+                </div>
+                
+                <h2>Ready to practice multiplication?</h2>
+                <p>Answer 20 questions correctly as fast as you can!</p>
+                <button id="start-btn" class="btn primary">Start Game</button>
+            </div>
+
+            <div id="game-screen" class="hidden">
+                <div class="question-container">
+                    <div class="question" id="question">
+                        <span id="num1">7</span>
+                        <span class="operator">×</span>
+                        <span id="num2">8</span>
+                        <span class="equals">=</span>
+                        <input type="number" id="answer-input" placeholder="?" autofocus>
+                    </div>
+                </div>
+                
+                <div class="controls">
+                    <button id="submit-btn" class="btn primary">Submit</button>
+                    <button id="skip-btn" class="btn secondary">Skip</button>
+                </div>
+
+                <div id="feedback" class="feedback hidden"></div>
+            </div>
+
+            <div id="end-screen" class="hidden">
+                <h2>Congratulations! 🎉</h2>
+                <div class="final-stats">
+                    <p>You completed 20 correct answers!</p>
+                    <p>Time: <span id="final-time"></span></p>
+                    <p>Total questions answered: <span id="total-answered"></span></p>
+                    <p>Accuracy: <span id="accuracy"></span>%</p>
+                </div>
+                
+                <div id="new-record" class="new-record hidden">
+                    <h3>🎉 NEW HIGH SCORE! 🎉</h3>
+                    <p>Enter your name for the leaderboard:</p>
+                    <div class="name-input-section">
+                        <input type="text" id="player-name" placeholder="Your name" maxlength="20">
+                        <button id="save-score-btn" class="btn primary">Save Score</button>
+                    </div>
+                </div>
+                
+                <button id="restart-btn" class="btn primary">Play Again</button>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
