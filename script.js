@@ -282,11 +282,11 @@ class MultiplicationGame {
     showFeedback(message, isCorrect) {
         this.feedback.textContent = message;
         this.feedback.className = `feedback ${isCorrect ? 'correct' : 'incorrect'}`;
-        this.feedback.classList.remove('hidden');
     }
     
     hideFeedback() {
-        this.feedback.classList.add('hidden');
+        this.feedback.textContent = '';
+        this.feedback.className = 'feedback';
     }
     
     updateStats() {
