@@ -252,11 +252,6 @@ class MultiplicationGame {
         if (userAnswer === this.currentQuestion.answer) {
             this.correctAnswers++;
             this.showFeedback('Correct! 🎉', true);
-            
-            if (this.correctAnswers >= this.targetCorrect) {
-                setTimeout(() => this.endGame(), 1000);
-                return;
-            }
         } else {
             this.wrongAnswers++;
             this.showFeedback(
@@ -266,6 +261,11 @@ class MultiplicationGame {
         }
         
         this.updateStats();
+        if (this.correctAnswers >= this.targetCorrect) {
+            setTimeout(() => this.endGame(), 1000);
+            return;
+        }
+
         setTimeout(() => this.generateQuestion(), 1500);
     }
     

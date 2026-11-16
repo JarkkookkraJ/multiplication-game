@@ -57,6 +57,13 @@ The game tracks:
 - Accuracy percentage
 - Personal best times
 
+## Regression Tests
+
+Serve this repository with a static HTTP server and open `tests/completion.html`
+in your browser. The dependency-free checks complete rounds with 20 correct
+answers, both with and without wrong answers, and verify the header counts,
+completion total, and accuracy.
+
 ---
 
 **Ready to test your multiplication skills?** [Play the game here!](https://yourusername.github.io/multiplication-game)

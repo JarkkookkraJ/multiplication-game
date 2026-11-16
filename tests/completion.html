@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Completion statistics regression tests</title>
+</head>
+<body>
+    <h1>Completion statistics regression tests</h1>
+    <pre id="results" role="status">Running...</pre>
+    <script>
+        const results = document.getElementById('results');
+
+        function assert(condition, message) {
+            if (!condition) throw new Error(message);
+        }
+
+        async function testCompletion(wrongAnswers) {
+            const frame = document.createElement('iframe');
+            frame.title = 'Game under test';
+            frame.hidden = true;
+            const loaded = new Promise((resolve, reject) => {
+                frame.onload = resolve;
+                frame.onerror = () => reject(new Error('Could not load the game'));
+            });
+            frame.src = '../index.html';
+            document.body.appendChild(frame);
+
+            try {
+                await loaded;
+                const gameWindow = frame.contentWindow;
+                const game = frame.contentDocument;
+                const pending = [];
+                gameWindow.setTimeout = callback => pending.push(callback);
+                gameWindow.setInterval = () => 1;
+                gameWindow.clearInterval = () => {};
+                const get = id => game.getElementById(id);
+                const advance = () => {
+                    assert(pending.length === 1, 'Expected exactly one pending game transition');
+                    pending.shift()();
+                };
+                const submit = answer => {
+                    get('answer-input').value = answer;
+                    get('submit-btn').click();
+                };
+
+                get('start-btn').click();
+                for (let wrong = 0; wrong < wrongAnswers; wrong++) {
+                    submit(-1);
+                    advance();
+                }
+
+                for (let correct = 1; correct <= 20; correct++) {
+                    submit(Number(get('num1').textContent) * Number(get('num2').textContent));
+                    assert(get('correct-count').textContent === String(correct),
+                        `After answer ${correct}, header shows ${get('correct-count').textContent} correct`);
+                    assert(get('wrong-count').textContent === String(wrongAnswers),
+                        'Header lost wrong answers');
+                    assert(get('end-screen').classList.contains('hidden'),
+                        'Completion should wait for the final feedback');
+                    advance();
+                }
+
+                assert(!get('end-screen').classList.contains('hidden'), 'Completion screen did not appear');
+                assert(get('correct-count').textContent === '20', 'Completed header should show 20 correct');
+                assert(get('wrong-count').textContent === String(wrongAnswers), 'Completed header has wrong count');
+                assert(get('total-answered').textContent === String(20 + wrongAnswers),
+                    'Completion total does not include every answer');
+                assert(get('accuracy').textContent === String(Math.round(20 / (20 + wrongAnswers) * 100)),
+                    'Completion accuracy does not match the answer counts');
+            } finally {
+                frame.remove();
+            }
+        }
+
+        (async () => {
+            const outcomes = [];
+            for (const wrongAnswers of [0, 3]) {
+                const name = `20 correct, ${wrongAnswers} wrong`;
+                try {
+                    await testCompletion(wrongAnswers);
+                    outcomes.push(`PASS: ${name}`);
+                } catch (error) {
+                    outcomes.push(`FAIL: ${name}: ${error.message}`);
+                }
+            }
+            results.textContent = outcomes.join('\n');
+            document.title = outcomes.every(outcome => outcome.startsWith('PASS'))
+                ? 'PASS - Completion statistics'
+                : 'FAIL - Completion statistics';
+        })();
+    </script>
+</body>
+</html>
