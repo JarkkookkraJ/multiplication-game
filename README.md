@@ -4,7 +4,8 @@ A fun and interactive web-based multiplication training game to help practice ma
 
 ## 🎯 Features
 
-- **Random multiplication questions** (2×2 to 9×9)
+- **Selectable multiplication tables** from 1 to 10; practice any combination
+- **Random multiplication questions** using your selected tables with multipliers from 1 to 10
 - **Real-time scoring** tracking correct and wrong answers
 - **Timer** showing elapsed time
 - **Highscore board** with top 3 fastest times
@@ -15,11 +16,18 @@ A fun and interactive web-based multiplication training game to help practice ma
 
 ## 🚀 How to Play
 
-1. Click "Start Game" to begin
+1. Select the numbered table chips you want to practice, then click "Start Game"
 2. Answer 20 multiplication questions correctly as fast as you can
 3. Type your answer and press Enter or click Submit
 4. Skip questions if you're stuck (counts as wrong)
 5. Achieve a top 3 time to enter your name on the leaderboard!
+
+Tables 2 through 9 are selected by default. Click a chip to select or deselect it;
+for example, leave only 2 and 5 selected to practice those two tables. Select at
+least one table to enable "Start Game". Your selection stays selected when you
+choose "Play Again", so you can keep it or change it before the next round.
+Selections reset to the defaults when you reload the page. High scores continue
+to use one shared leaderboard across all table selections.
 
 ## 🏆 Goal
 
