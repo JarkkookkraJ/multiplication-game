@@ -41,6 +41,12 @@
                 
                 <h2>Ready to practice multiplication?</h2>
                 <p>Answer 20 questions correctly as fast as you can!</p>
+                <fieldset class="table-selection" aria-describedby="table-selection-help">
+                    <legend>Choose your multiplication tables</legend>
+                    <p id="table-selection-help">Select as many as you like. Each table uses multipliers from 1 to 10.</p>
+                    <div id="table-options" class="table-options"></div>
+                    <p id="table-selection-status" role="status" aria-live="polite"></p>
+                </fieldset>
                 <button id="start-btn" class="btn primary">Start Game</button>
             </div>
 
@@ -56,11 +62,12 @@
                 </div>
                 
                 <div class="controls">
-                    <button id="submit-btn" class="btn primary">Submit</button>
-                    <button id="skip-btn" class="btn secondary">Skip</button>
+                    <div class="action-buttons">
+                        <button id="submit-btn" class="btn primary">Submit</button>
+                        <button id="skip-btn" class="btn secondary">Skip</button>
+                    </div>
+                    <div id="feedback" class="feedback" role="status" aria-atomic="true"></div>
                 </div>
-
-                <div id="feedback" class="feedback hidden"></div>
             </div>
 
             <div id="end-screen" class="hidden">

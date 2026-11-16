@@ -6,9 +6,11 @@ class MultiplicationGame {
         this.currentQuestion = null;
         this.timerInterval = null;
         this.targetCorrect = 20;
+        this.selectedTables = new Set([2, 3, 4, 5, 6, 7, 8, 9]);
         this.highscores = this.loadHighscores();
         
         this.initializeElements();
+        this.initializeTableSelection();
         this.attachEventListeners();
         this.displayHighscores();
     }
@@ -46,6 +48,40 @@ class MultiplicationGame {
         
         // Highscore elements
         this.highscoresList = document.getElementById('highscores-list');
+    }
+
+    initializeTableSelection() {
+        const tableOptions = document.getElementById('table-options');
+        this.tableSelectionStatus = document.getElementById('table-selection-status');
+
+        for (let table = 1; table <= 10; table++) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'table-chip';
+            button.textContent = table;
+            button.setAttribute('aria-label', `${table} times table`);
+            button.setAttribute('aria-pressed', String(this.selectedTables.has(table)));
+            button.addEventListener('click', () => {
+                if (this.selectedTables.has(table)) {
+                    this.selectedTables.delete(table);
+                } else {
+                    this.selectedTables.add(table);
+                }
+                button.setAttribute('aria-pressed', String(this.selectedTables.has(table)));
+                this.updateTableSelection();
+            });
+            tableOptions.appendChild(button);
+        }
+
+        this.updateTableSelection();
+    }
+
+    updateTableSelection() {
+        const tables = Array.from(this.selectedTables).sort((a, b) => a - b);
+        this.startBtn.disabled = tables.length === 0;
+        this.tableSelectionStatus.textContent = tables.length === 0
+            ? 'Select at least one table to start.'
+            : `Selected tables: ${tables.join(', ')}.`;
     }
     
     attachEventListeners() {
@@ -150,6 +186,11 @@ class MultiplicationGame {
     }
     
     startGame() {
+        if (this.selectedTables.size === 0) {
+            this.updateTableSelection();
+            return;
+        }
+
         this.correctAnswers = 0;
         this.wrongAnswers = 0;
         this.startTime = Date.now();
@@ -181,8 +222,9 @@ class MultiplicationGame {
     }
     
     generateQuestion() {
-        const num1 = Math.floor(Math.random() * 8) + 2;
-        const num2 = Math.floor(Math.random() * 8) + 2;
+        const tables = Array.from(this.selectedTables);
+        const num1 = tables[Math.floor(Math.random() * tables.length)];
+        const num2 = Math.floor(Math.random() * 10) + 1;
 
         this.currentQuestion = {
             num1: num1,
@@ -210,11 +252,6 @@ class MultiplicationGame {
         if (userAnswer === this.currentQuestion.answer) {
             this.correctAnswers++;
             this.showFeedback('Correct! 🎉', true);
-            
-            if (this.correctAnswers >= this.targetCorrect) {
-                setTimeout(() => this.endGame(), 1000);
-                return;
-            }
         } else {
             this.wrongAnswers++;
             this.showFeedback(
@@ -224,6 +261,11 @@ class MultiplicationGame {
         }
         
         this.updateStats();
+        if (this.correctAnswers >= this.targetCorrect) {
+            setTimeout(() => this.endGame(), 1000);
+            return;
+        }
+
         setTimeout(() => this.generateQuestion(), 1500);
     }
     
@@ -240,11 +282,11 @@ class MultiplicationGame {
     showFeedback(message, isCorrect) {
         this.feedback.textContent = message;
         this.feedback.className = `feedback ${isCorrect ? 'correct' : 'incorrect'}`;
-        this.feedback.classList.remove('hidden');
     }
     
     hideFeedback() {
-        this.feedback.classList.add('hidden');
+        this.feedback.textContent = '';
+        this.feedback.className = 'feedback';
     }
     
     updateStats() {
